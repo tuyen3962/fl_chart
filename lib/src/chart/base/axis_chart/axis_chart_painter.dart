@@ -3,7 +3,9 @@ import 'package:fl_chart/src/chart/bar_chart/bar_chart_painter.dart';
 import 'package:fl_chart/src/chart/base/axis_chart/axis_chart_helper.dart';
 import 'package:fl_chart/src/chart/base/base_chart/base_chart_painter.dart';
 import 'package:fl_chart/src/chart/line_chart/line_chart_painter.dart';
+import 'package:fl_chart/src/extensions/fl_titles_data_extension.dart';
 import 'package:fl_chart/src/extensions/paint_extension.dart';
+import 'package:fl_chart/src/extensions/side_titles_extension.dart';
 import 'package:fl_chart/src/utils/canvas_wrapper.dart';
 import 'package:fl_chart/src/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -461,10 +463,16 @@ abstract class AxisChartPainter<D extends AxisChartData>
   double getPixelY(double spotY, Size viewSize, PaintHolder<D> holder) {
     final data = holder.data;
     final deltaY = data.maxY - data.minY;
+    var paddingBottom = 0.0;
     if (deltaY == 0.0) {
       return viewSize.height;
     }
-    return viewSize.height - (((spotY - data.minY) / deltaY) * viewSize.height);
+    if (holder.data.titlesData.bottomTitles.isAllowOverflow) {
+      paddingBottom = holder.data.titlesData.bottomTitles.totalReservedSize;
+    }
+    return viewSize.height -
+        (((spotY - data.minY) / deltaY) * viewSize.height) -
+        paddingBottom;
   }
 
   /// With this function we can get horizontal
