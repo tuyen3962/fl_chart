@@ -80,7 +80,7 @@ class SideTitlesWidget extends StatelessWidget {
   }
 
   EdgeInsets get thisSidePadding {
-    final titlesPadding = titlesData.allSidesPadding;
+    final titlesPadding = titlesData.allSidesPadding();
     final borderPadding = axisChartData.borderData.allSidesPadding;
     switch (side) {
       case AxisSide.right:
@@ -94,7 +94,7 @@ class SideTitlesWidget extends StatelessWidget {
 
   double get thisSidePaddingTotal {
     final borderPadding = axisChartData.borderData.allSidesPadding;
-    final titlesPadding = titlesData.allSidesPadding;
+    final titlesPadding = titlesData.allSidesPadding();
     switch (side) {
       case AxisSide.right:
       case AxisSide.left:

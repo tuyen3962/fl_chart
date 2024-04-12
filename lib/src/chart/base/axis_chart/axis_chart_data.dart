@@ -299,10 +299,13 @@ class AxisTitles with EquatableMixin {
     this.axisNameSize = 16,
     this.sideTitles = const SideTitles(),
     this.drawBelowEverything = true,
+    this.isAllowOverflow = false,
   });
 
   /// Determines the size of [axisName]
   final double axisNameSize;
+
+  final bool isAllowOverflow;
 
   /// It shows the name of axis, for example your x-axis shows year,
   /// then you might want to show it using [axisNameWidget] property as a widget

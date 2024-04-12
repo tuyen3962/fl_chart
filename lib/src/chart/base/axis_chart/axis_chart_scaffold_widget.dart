@@ -67,7 +67,7 @@ class AxisChartScaffoldWidget extends StatelessWidget {
   List<Widget> stackWidgets(BoxConstraints constraints) {
     final widgets = <Widget>[
       Container(
-        margin: data.titlesData.allSidesPadding,
+        margin: data.titlesData.allSidesPadding(isPaddingForChart: true),
         decoration: BoxDecoration(
           border: data.borderData.isVisible() ? data.borderData.border : null,
         ),
