@@ -8,6 +8,7 @@ import 'package:fl_chart/src/extensions/bar_chart_data_extension.dart';
 import 'package:fl_chart/src/extensions/paint_extension.dart';
 import 'package:fl_chart/src/extensions/path_extension.dart';
 import 'package:fl_chart/src/extensions/rrect_extension.dart';
+import 'package:fl_chart/src/extensions/side_titles_extension.dart';
 import 'package:fl_chart/src/utils/canvas_wrapper.dart';
 import 'package:fl_chart/src/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -170,22 +171,27 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
             max(borderRadius.topLeft.y, borderRadius.topRight.y) +
                 max(borderRadius.bottomLeft.y, borderRadius.bottomRight.y);
 
-        RRect barRRect;
+        RRect? barRRect;
 
         /// Draw [BackgroundBarChartRodData]
         if (barRod.backDrawRodData.show &&
             barRod.backDrawRodData.toY != barRod.backDrawRodData.fromY) {
           if (barRod.backDrawRodData.toY > barRod.backDrawRodData.fromY) {
             // positive
+            var paddingBottom = 0.0;
+            if (data.titlesData.bottomTitles.isAllowOverflow) {
+              paddingBottom = data.titlesData.bottomTitles.totalReservedSize;
+            }
             final bottom = getPixelY(
               max(data.minY, barRod.backDrawRodData.fromY),
               viewSize,
               holder,
             );
             final top = min(
-              getPixelY(barRod.backDrawRodData.toY, viewSize, holder),
-              bottom - cornerHeight,
-            );
+                  getPixelY(barRod.backDrawRodData.toY, viewSize, holder),
+                  bottom - cornerHeight,
+                ) -
+                paddingBottom;
 
             barRRect = RRect.fromLTRBAndCorners(
               left,
@@ -234,12 +240,17 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
         if (barRod.toY != barRod.fromY) {
           if (barRod.toY > barRod.fromY) {
             // positive
+            var paddingBottom = 0.0;
+            if (data.titlesData.bottomTitles.isAllowOverflow) {
+              paddingBottom = data.titlesData.bottomTitles.totalReservedSize;
+            }
             final bottom =
                 getPixelY(max(data.minY, barRod.fromY), viewSize, holder);
             final top = min(
-              getPixelY(barRod.toY, viewSize, holder),
-              bottom - cornerHeight,
-            );
+                  getPixelY(barRod.toY, viewSize, holder),
+                  bottom - cornerHeight,
+                ) +
+                paddingBottom;
 
             barRRect = RRect.fromLTRBAndCorners(
               left,
@@ -253,8 +264,10 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
             );
           } else {
             // negative
+
             final top =
                 getPixelY(min(data.maxY, barRod.fromY), viewSize, holder);
+
             final bottom = max(
               getPixelY(barRod.toY, viewSize, holder),
               top + cornerHeight,
@@ -270,6 +283,10 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
               bottomLeft: borderRadius.bottomLeft,
               bottomRight: borderRadius.bottomRight,
             );
+          }
+
+          if (barRRect == null) {
+            continue;
           }
           _barPaint.setColorOrGradient(
             barRod.color,
