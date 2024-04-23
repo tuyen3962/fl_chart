@@ -247,7 +247,7 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
             final bottom =
                 getPixelY(max(data.minY, barRod.fromY), viewSize, holder);
             final top = min(
-              getPixelY(barRod.toY, viewSize, holder) + paddingBottom,
+              getPixelY(barRod.toY, viewSize, holder),
               bottom - cornerHeight,
             );
 
