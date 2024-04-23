@@ -52,13 +52,29 @@ class _BarChartState extends AnimatedWidgetBaseState<BarChart> {
     final showingData = _getData();
 
     return AxisChartScaffoldWidget(
-      data: showingData,
-      chart: BarChartLeaf(
-        data: _withTouchedIndicators(_barChartDataTween!.evaluate(animation)),
-        targetData: _withTouchedIndicators(showingData),
-        key: widget.chartRendererKey,
-      ),
-    );
+        data: showingData,
+        chart: Stack(
+          children: [
+            Positioned.fill(
+              child: BarChartLeaf(
+                isDrawBasePaint: false,
+                data: _withTouchedIndicators(
+                    _barChartDataTween!.evaluate(animation)),
+                targetData: _withTouchedIndicators(showingData),
+                key: widget.chartRendererKey,
+              ),
+            ),
+            Positioned.fill(
+              child: BarChartLeaf(
+                isDrawBarChart: false,
+                data: _withTouchedIndicators(
+                    _barChartDataTween!.evaluate(animation)),
+                targetData: _withTouchedIndicators(showingData),
+                key: widget.chartRendererKey,
+              ),
+            ),
+          ],
+        ));
   }
 
   BarChartData _withTouchedIndicators(BarChartData barChartData) {

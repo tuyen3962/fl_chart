@@ -23,7 +23,11 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
   /// [textScale] used for scaling texts inside the chart,
   /// parent can use [MediaQuery.textScaleFactor] to respect
   /// the system's font size.
-  BarChartPainter() : super() {
+
+  final bool isDrawBasePaint;
+  final bool isDrawBarChart;
+
+  BarChartPainter(this.isDrawBasePaint, this.isDrawBarChart) : super() {
     _barPaint = Paint()..style = PaintingStyle.fill;
     _barStrokePaint = Paint()..style = PaintingStyle.stroke;
 
@@ -50,7 +54,10 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
     CanvasWrapper canvasWrapper,
     PaintHolder<BarChartData> holder,
   ) {
-    super.paint(context, canvasWrapper, holder);
+    if (isDrawBasePaint) {
+      super.paint(context, canvasWrapper, holder);
+    }
+    if (!isDrawBarChart) return;
     final data = holder.data;
     final targetData = holder.targetData;
 
@@ -178,20 +185,15 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
             barRod.backDrawRodData.toY != barRod.backDrawRodData.fromY) {
           if (barRod.backDrawRodData.toY > barRod.backDrawRodData.fromY) {
             // positive
-            var paddingBottom = 0.0;
-            if (data.titlesData.bottomTitles.isAllowOverflow) {
-              paddingBottom = data.titlesData.bottomTitles.totalReservedSize;
-            }
             final bottom = getPixelY(
               max(data.minY, barRod.backDrawRodData.fromY),
               viewSize,
               holder,
             );
             final top = min(
-                  getPixelY(barRod.backDrawRodData.toY, viewSize, holder),
-                  bottom - cornerHeight,
-                ) -
-                paddingBottom;
+              getPixelY(barRod.backDrawRodData.toY, viewSize, holder),
+              bottom - cornerHeight,
+            );
 
             barRRect = RRect.fromLTRBAndCorners(
               left,
@@ -242,12 +244,8 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
             // positive
             final bottom =
                 getPixelY(max(data.minY, barRod.fromY), viewSize, holder);
-            final top = max(
-                0.0,
-                min(
-                  getPixelY(barRod.toY, viewSize, holder),
-                  bottom - cornerHeight,
-                ));
+            final top = min(
+                getPixelY(barRod.toY, viewSize, holder), bottom - cornerHeight);
 
             barRRect = RRect.fromLTRBAndCorners(
               left,

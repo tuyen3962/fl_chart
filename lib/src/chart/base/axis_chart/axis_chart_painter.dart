@@ -470,9 +470,7 @@ abstract class AxisChartPainter<D extends AxisChartData>
     if (holder.data.titlesData.bottomTitles.isAllowOverflow) {
       paddingBottom = holder.data.titlesData.bottomTitles.totalReservedSize;
     }
-    return viewSize.height -
-        (((spotY - data.minY) / deltaY) * viewSize.height) -
-        paddingBottom;
+    return viewSize.height - (((spotY - data.minY) / deltaY) * viewSize.height);
   }
 
   /// With this function we can get horizontal

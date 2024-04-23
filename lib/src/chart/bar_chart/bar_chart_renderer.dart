@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:fl_chart/src/chart/bar_chart/bar_chart_painter.dart';
 import 'package:fl_chart/src/chart/base/base_chart/base_chart_painter.dart';
 import 'package:fl_chart/src/chart/base/base_chart/render_base_chart.dart';
+import 'package:fl_chart/src/extensions/side_titles_extension.dart';
 import 'package:fl_chart/src/utils/canvas_wrapper.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -9,8 +10,16 @@ import 'package:flutter/cupertino.dart';
 
 /// Low level BarChart Widget.
 class BarChartLeaf extends LeafRenderObjectWidget {
-  const BarChartLeaf({super.key, required this.data, required this.targetData});
+  const BarChartLeaf({
+    super.key,
+    required this.data,
+    required this.targetData,
+    this.isDrawBasePaint = true,
+    this.isDrawBarChart = true,
+  });
 
+  final bool isDrawBasePaint;
+  final bool isDrawBarChart;
   final BarChartData data;
   final BarChartData targetData;
 
@@ -20,6 +29,8 @@ class BarChartLeaf extends LeafRenderObjectWidget {
         data,
         targetData,
         MediaQuery.of(context).textScaler,
+        isDrawBasePaint,
+        isDrawBarChart,
       );
 
   @override
@@ -40,11 +51,15 @@ class RenderBarChart extends RenderBaseChart<BarTouchResponse> {
     BarChartData data,
     BarChartData targetData,
     TextScaler textScaler,
+    this.isDrawBasePaint,
+    this.isDrawBarChart,
   )   : _data = data,
         _targetData = targetData,
         _textScaler = textScaler,
         super(targetData.barTouchData, context);
 
+  final bool isDrawBarChart;
+  final bool isDrawBasePaint;
   BarChartData get data => _data;
   BarChartData _data;
 
@@ -78,7 +93,8 @@ class RenderBarChart extends RenderBaseChart<BarTouchResponse> {
   Size? mockTestSize;
 
   @visibleForTesting
-  BarChartPainter painter = BarChartPainter();
+  late BarChartPainter painter =
+      BarChartPainter(isDrawBasePaint, isDrawBarChart);
 
   PaintHolder<BarChartData> get paintHolder =>
       PaintHolder(data, targetData, textScaler);
@@ -88,9 +104,15 @@ class RenderBarChart extends RenderBaseChart<BarTouchResponse> {
     final canvas = context.canvas
       ..save()
       ..translate(offset.dx, offset.dy);
+    final reversize = data.titlesData.bottomTitles.isAllowOverflow
+        ? data.titlesData.bottomTitles.totalReservedSize
+        : 0;
+    final baseSize = mockTestSize ?? size;
+    final newSize = Size(baseSize.width, baseSize.height - reversize);
+
     painter.paint(
       buildContext,
-      CanvasWrapper(canvas, mockTestSize ?? size),
+      CanvasWrapper(canvas, isDrawBarChart ? newSize : mockTestSize ?? size),
       paintHolder,
     );
     canvas.restore();
