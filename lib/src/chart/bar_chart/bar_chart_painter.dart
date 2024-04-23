@@ -240,16 +240,14 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
         if (barRod.toY != barRod.fromY) {
           if (barRod.toY > barRod.fromY) {
             // positive
-            var paddingBottom = 0.0;
-            if (data.titlesData.bottomTitles.isAllowOverflow) {
-              paddingBottom = data.titlesData.bottomTitles.totalReservedSize;
-            }
             final bottom =
                 getPixelY(max(data.minY, barRod.fromY), viewSize, holder);
-            final top = min(
-              getPixelY(barRod.toY, viewSize, holder),
-              bottom - cornerHeight,
-            );
+            final top = max(
+                0.0,
+                min(
+                  getPixelY(barRod.toY, viewSize, holder),
+                  bottom - cornerHeight,
+                ));
 
             barRRect = RRect.fromLTRBAndCorners(
               left,
