@@ -463,13 +463,6 @@ abstract class AxisChartPainter<D extends AxisChartData>
   double getPixelY(double spotY, Size viewSize, PaintHolder<D> holder) {
     final data = holder.data;
     final deltaY = data.maxY - data.minY;
-    var paddingBottom = 0.0;
-    if (deltaY == 0.0) {
-      return viewSize.height;
-    }
-    if (holder.data.titlesData.bottomTitles.isAllowOverflow) {
-      paddingBottom = holder.data.titlesData.bottomTitles.totalReservedSize;
-    }
     return viewSize.height - (((spotY - data.minY) / deltaY) * viewSize.height);
   }
 

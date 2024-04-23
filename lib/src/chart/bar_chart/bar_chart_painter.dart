@@ -56,6 +56,7 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
   ) {
     if (isDrawBasePaint) {
       super.paint(context, canvasWrapper, holder);
+      return;
     }
     if (!isDrawBarChart) return;
     final data = holder.data;
@@ -95,6 +96,7 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
     for (var i = 0; i < targetData.barGroups.length; i++) {
       final barGroup = targetData.barGroups[i];
       for (var j = 0; j < barGroup.barRods.length; j++) {
+        print(barGroup.showingTooltipIndicators);
         if (!barGroup.showingTooltipIndicators.contains(j)) {
           continue;
         }

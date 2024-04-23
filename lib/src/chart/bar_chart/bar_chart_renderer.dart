@@ -99,20 +99,27 @@ class RenderBarChart extends RenderBaseChart<BarTouchResponse> {
   PaintHolder<BarChartData> get paintHolder =>
       PaintHolder(data, targetData, textScaler);
 
-  @override
-  void paint(PaintingContext context, Offset offset) {
-    final canvas = context.canvas
-      ..save()
-      ..translate(offset.dx, offset.dy);
+  Size get canvasSize {
+    if (!isDrawBarChart) {
+      return mockTestSize ?? size;
+    }
     final reversize = data.titlesData.bottomTitles.isAllowOverflow
         ? data.titlesData.bottomTitles.totalReservedSize
         : 0;
     final baseSize = mockTestSize ?? size;
     final newSize = Size(baseSize.width, baseSize.height - reversize);
+    return newSize;
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    final canvas = context.canvas
+      ..save()
+      ..translate(offset.dx, offset.dy);
 
     painter.paint(
       buildContext,
-      CanvasWrapper(canvas, isDrawBarChart ? newSize : mockTestSize ?? size),
+      CanvasWrapper(canvas, canvasSize),
       paintHolder,
     );
     canvas.restore();
@@ -120,9 +127,16 @@ class RenderBarChart extends RenderBaseChart<BarTouchResponse> {
 
   @override
   BarTouchResponse getResponseAtLocation(Offset localPosition) {
+    // final reversize = data.titlesData.bottomTitles.isAllowOverflow
+    //     ? data.titlesData.bottomTitles.totalReservedSize
+    //     : 0;
+    // final position = isDrawBarChart
+    //     ? Offset(localPosition.dx, localPosition.dy)
+    //     : localPosition;
+
     final touchedSpot = painter.handleTouch(
       localPosition,
-      mockTestSize ?? size,
+      canvasSize,
       paintHolder,
     );
     return BarTouchResponse(touchedSpot);
