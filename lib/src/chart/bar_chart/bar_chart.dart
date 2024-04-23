@@ -57,7 +57,7 @@ class _BarChartState extends AnimatedWidgetBaseState<BarChart> {
           children: [
             Positioned.fill(
               child: BarChartLeaf(
-                isDrawBasePaint: false,
+                isDrawBarChart: false,
                 data: _withTouchedIndicators(
                     _barChartDataTween!.evaluate(animation)),
                 targetData: _withTouchedIndicators(showingData),
@@ -66,7 +66,7 @@ class _BarChartState extends AnimatedWidgetBaseState<BarChart> {
             ),
             Positioned.fill(
               child: BarChartLeaf(
-                isDrawBarChart: false,
+                isDrawBasePaint: false,
                 data: _withTouchedIndicators(
                     _barChartDataTween!.evaluate(animation)),
                 targetData: _withTouchedIndicators(showingData),
